@@ -69,6 +69,23 @@ if __name__ == '__main__':
 
     vis_flow = flow_to_image(np_flow_12)
 
-    fig = plt.figure()
-    plt.imshow(vis_flow)
-    plt.show()
+     t3=args.img_list[0].split('_')
+    t0=t3[2].split('.')
+    t=args.img_list[1].split('_')
+    t1=t[2].split('.')
+       
+    ts = TestHelper(cfg)
+
+    imgs = [imageio.imread(img).astype(np.float32) for img in args.img_list]
+    h, w = imgs[0].shape[:2]
+
+    flow_12 = ts.run(imgs)['flows_fw'][0]
+
+    flow_12 = resize_flow(flow_12, (h, w))
+    np_flow_12 = flow_12[0].detach().cpu().numpy().transpose([1, 2, 0])
+
+    vis_flow = flow_to_image(np_flow_12)
+    import cv2
+    cv2.imwrite("/content/drive/MyDrive/res/"+t0[0]+ " " +t1[0]+".png", vis_flow)
+
+    
